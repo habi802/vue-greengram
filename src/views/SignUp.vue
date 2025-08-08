@@ -10,10 +10,10 @@ const router = useRouter();
 
 const state = reactive({
   data: {
-    nickName: '홍길동',
-    uid: 'mic2',
-    upw: 'aaaa1212!!',
-    chkUpw: 'aaaa1212!!',
+    nickName: '',
+    uid: '',
+    upw: '',
+    chkUpw: '',
     pic: null,
     roles: []
   },

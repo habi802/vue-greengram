@@ -11,8 +11,8 @@ const authentication = useAuthenticationStore();
 
 const state = reactive({
   form: {
-    uid: 'mic2',
-    upw: 'aaaa1212!!',
+    uid: '',
+    upw: '',
   },
 });
 
