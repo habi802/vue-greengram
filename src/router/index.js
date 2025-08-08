@@ -30,6 +30,7 @@ const router = createRouter({
 
 const unSignedPathList = ['/sign-in', '/sign-up']
 
+// navigation guard
 router.beforeEach((to, from) => {
   const authentcationStore = useAuthenticationStore();
   console.log(`router: from: ${from.path} ==> to: ${to.path}`);
