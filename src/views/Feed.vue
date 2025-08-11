@@ -1,8 +1,10 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import { useAuthenticationStore } from '@/stores/authentication';
 import FeedCard from '@/components/FeedCard.vue';
 import { getFeedList, postFeed } from '@/services/feedService';
+
+const INFINITY_SCROLL_GAP = 500;
 
 const modalCloseButton = ref(null);
 
@@ -11,6 +13,7 @@ const authenticationStore = useAuthenticationStore();
 const state = reactive({
     list: [],
     isLoading: false,
+    isFinish: false,
     feed: {
         location: '',
         contents: '',
@@ -25,7 +28,11 @@ const data = {
 
 onMounted(() => {
     getData();
-})
+});
+
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll);
+});
 
 const getCurrentTimestamp = () => {
     const today = new Date();
@@ -42,6 +49,7 @@ const getCurrentTimestamp = () => {
 }
 
 const getData = async () => {
+    state.isLoading = true;
     const params = {
         page: data.page++,
         row_per_page: data.rowPerPage
@@ -53,7 +61,11 @@ const getData = async () => {
         if(result && result.length > 0) {
             state.list = [...state.list, ...result];
         }
+        if(result.length < data.rowPerPage) {
+            state.isFinish = true
+        }
     }
+    state.isLoading = false;
 }
 
 const handlePicChanged = e => {
@@ -102,6 +114,13 @@ const saveFeed = async () => {
         modalCloseButton.value.click(); //모달창 닫기
     }
 }
+
+const handleScroll = () => {       
+    if(state.isFinish || state.isLoading || parseInt(window.innerHeight + window.scrollY) + INFINITY_SCROLL_GAP <= document.documentElement.offsetHeight) {
+        return;
+    }        
+    getData();  
+};
 </script>
 
 <template>
