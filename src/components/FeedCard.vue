@@ -5,31 +5,41 @@ import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { reactive } from 'vue';
 import { getDateTimeInfo } from '@/utils/feedUtils';
+import { toggleFeedLike } from '@/services/feedLikeService';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
-const state = reactive({    
-    modules: [Navigation, Pagination, Scrollbar, A11y]
-});
-
 const props = defineProps({
   item: {
+    feedId: Number,
     writerUserId: Number,    
     writerPic: String,
     writerNm: String,
     location: String,
-    ynDel: Boolean,
     pics: Array,
-    contents: String
+    contents: String,
+    isLike: Boolean,
+    comment: Object
   },
+  ynDel: Boolean,
+  onDeleteFeed: Function
 });
 
+const state = reactive({    
+    modules: [Navigation, Pagination, Scrollbar, A11y],
+    isLike: props.item.isLike
+});
 
-const toggleLike = () => {
+const toggleLike = async () => {
   console.log('toggleLike click!');
+  const data = { feedId: props.item.feedId }
+  const res = await toggleFeedLike(data);
+  if(res.status === 200) {
+    state.isLike = res.data.result;
+  }
 }
 </script>
 
@@ -58,11 +68,11 @@ const toggleLike = () => {
             :slides-per-view="1"
             :space-between="50">
         <swiper-slide v-for="(item, idx) in props.item.pics" :virtualIndex="idx" :key="idx">
-          <img :src="`${baseUrl}/api/greengram/pic/item/${item.id}/${item.imgPath}`" :alt="`이미지`" :aria-label="`이미지`" class="w614">
+          <img :src="`${baseUrl}/pic/feed/${props.item.feedId}/${item}`" :alt="`이미지`" :aria-label="`이미지`" class="w614">
         </swiper-slide>
     </swiper>
     <div class="favCont p-2 d-flex flex-row">
-      <i :class="`${isLike ? 'fas':'far'} fa-heart pointer rem1_2 me-3 color-red`" @click={toggleLike}></i>                
+      <i :class="`${state.isLike ? 'fas':'far'} fa-heart pointer rem1_2 me-3 color-red`" @click=toggleLike></i>                
     </div>    
     <div class="itemCtnt p-2">
       {{ props.item.contents }}
