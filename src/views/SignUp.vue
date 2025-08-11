@@ -2,7 +2,7 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { signUp } from '@/services/userService';
-import { checkValidation } from '@/services/validation';
+import { checkValidation } from '@/utils/validation';
 
 const fileInput = ref(null)
 

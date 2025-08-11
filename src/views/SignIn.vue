@@ -3,7 +3,7 @@ import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { signIn } from '@/services/userService';
 import { useAuthenticationStore } from '@/stores/authentication';
-import { checkValidation } from '@/services/validation';
+import { checkValidation } from '@/utils/validation';
 
 const router = useRouter();
 
