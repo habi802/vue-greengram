@@ -1,5 +1,6 @@
 <script setup>
 import ProfileImg from './ProfileImg.vue';
+import FeedCommentContainer from './FeedCommentContainer.vue';
 import { useAuthenticationStore } from '@/stores/authentication';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
@@ -30,7 +31,8 @@ const props = defineProps({
 
 const state = reactive({    
     modules: [Navigation, Pagination, Scrollbar, A11y],
-    isLike: props.item.isLike
+    isLike: props.item.isLike,
+    pagination: props.item.pics.length <= 5 ? { clickable: true } : null
 });
 
 const toggleLike = async () => {
@@ -77,6 +79,7 @@ const toggleLike = async () => {
     <div class="itemCtnt p-2">
       {{ props.item.contents }}
     </div>
+    <feed-comment-container :feed-id="props.item.feedId" :comments="props.item.comments" />
   </div>
 </template>
 

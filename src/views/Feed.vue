@@ -73,10 +73,15 @@ const handlePicChanged = e => {
 }
 
 const saveFeed = async () => {
+    const MAX_PIC_COUNT = 10;
+
     console.log('state.feed.pics: ', state.feed.pics);
-    //사진 있는지 확인    
+    //사진 있는지 확인
     if(state.feed.pics.length === 0) { 
         alert('사진을 선택해 주세요.');
+        return;
+    } else if (state.feed.pics.length >= MAX_PIC_COUNT) {
+        alert(`사진은 ${MAX_PIC_COUNT}장까지만 등록할 수 있습니다.`);
         return;
     }
 
@@ -110,16 +115,23 @@ const saveFeed = async () => {
         };
 
         state.list.unshift(item);
-
+        initInputs();
         modalCloseButton.value.click(); //모달창 닫기
     }
 }
 
-const handleScroll = () => {       
+const initInputs = () => {
+    state.feed.contents = '';
+    state.feed.location = '';
+    state.feed.pics = [];
+}
+
+const handleScroll = () => {   
+    // 쓰로틀링을 통해 같은 이벤트가 여러 번 발생하지 않도록 해야 함    
     if(state.isFinish || state.isLoading || parseInt(window.innerHeight + window.scrollY) + INFINITY_SCROLL_GAP <= document.documentElement.offsetHeight) {
         return;
     }        
-    getData();  
+    getData();
 };
 </script>
 
