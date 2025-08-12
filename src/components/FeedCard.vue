@@ -4,7 +4,7 @@ import FeedCommentContainer from './FeedCommentContainer.vue';
 import { useAuthenticationStore } from '@/stores/authentication';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/vue';
-import { reactive } from 'vue';
+import { ref, reactive } from 'vue';
 import { getDateTimeInfo } from '@/utils/feedUtils';
 import { toggleFeedLike } from '@/services/feedLikeService';
 
@@ -12,6 +12,10 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+
+const baseUrl = ref(import.meta.env.VITE_BASE_URL);
+
+const authenticationStore = useAuthenticationStore();
 
 const props = defineProps({
   item: {
@@ -85,5 +89,5 @@ const toggleLike = async () => {
 
 <style scoped>
 .item { border: 1px solid #9f9e9e; width: 600px; }
-.w614 { width: 614px; }
+.w614 { width: 614px; height: 300px; }
 </style>
