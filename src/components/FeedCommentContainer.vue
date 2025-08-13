@@ -103,7 +103,7 @@ const onDeleteComment = async (feedCommentId, idx) => {
     
     if(!confirm('댓글을 삭제하시겠습니까?')) { return; }
 
-    const params = { feedCommentId }
+    const params = { feed_comment_id: feedCommentId }
     
     const res = await deleteComment(params);
     if(res.status === 200) {    
