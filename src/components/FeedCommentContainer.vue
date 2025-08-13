@@ -37,6 +37,10 @@ const state = reactive({
     // ]
 });
 
+const data = {
+    rowPerPage: 31, 
+}
+
 //댓글 등록
 const onPostComment = async () => {
     if(state.comment.trim().length === 0) {
@@ -61,24 +65,27 @@ const onPostComment = async () => {
             comment: state.comment
         }
 
-        state.commentList.unshift(commentItem);
+        state.commentList.push(commentItem);
 
         state.comment = '';
     }
 }
 
+// 댓글 더보기
 const getMoreComment = async () => {
     console.log('getMoreComment clicked');
     state.isLoading = true;
     const params = { 
         feed_id: props.feedId,
-        start_idx: state.commentList.length
+        start_idx: state.commentList.length,
+        size: data.rowPerPage
     }
     const res = await getCommentList(params)
     if(res.status === 200) {
-        const moreCommentList = res.data.result;
-        if(moreCommentList.length > 0) {
-            state.commentList = [...state.commentList, ...moreCommentList]
+        const result = res.data.result;
+        state.moreComment = result.moreComment;
+        if(result.commentList.length > 0) {
+            state.commentList.push(...result.commentList);
         }
     }
     state.isLoading = false;
