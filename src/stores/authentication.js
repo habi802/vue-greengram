@@ -15,6 +15,10 @@ export const useAuthenticationStore = defineStore(
             state.isSigned = true;
         }
 
+        const setSigndUserPic = pic => {
+            state.signedUser.pic = pic;
+        }
+
         const signOut = async () => {
             console.log('signOut 처리')
             state.signedUser = null;
@@ -23,7 +27,7 @@ export const useAuthenticationStore = defineStore(
             await router.push('/sign-in')
         }
 
-        return { state, setSignedUser, signOut };
+        return { state, setSignedUser, setSigndUserPic, signOut };
     }, 
     { persist: true }
 );
