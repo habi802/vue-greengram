@@ -17,5 +17,5 @@ const messageModal = useMessageModalStore();
 </template>
 
 <style scoped>
-
+a { text-decoration: none !important; color: black !important; }
 </style>

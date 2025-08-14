@@ -1,10 +1,10 @@
 <script setup>
+import loadingImg from '@/assets/loading.gif';
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import { useAuthenticationStore } from '@/stores/authentication';
 import FeedCard from '@/components/FeedCard.vue';
 import { getFeedList, postFeed } from '@/services/feedService';
-
-const INFINITY_SCROLL_GAP = 500;
+import { bindEvent } from '@/utils/commonUtils';
 
 const modalCloseButton = ref(null);
 
@@ -26,7 +26,10 @@ const data = {
     rowPerPage: 20,
 };
 
+const handleScroll = () => { bindEvent(state, window, getData) };
+
 onMounted(() => {
+    window.addEventListener('scroll', handleScroll);
     getData();
 });
 
@@ -59,7 +62,7 @@ const getData = async () => {
     if(res.status === 200) {
         const result = res.data.result;
         if(result && result.length > 0) {
-            state.list = [...state.list, ...result];
+            state.list.push(...result);
         }
         if(result.length < data.rowPerPage) {
             state.isFinish = true
@@ -80,14 +83,14 @@ const saveFeed = async () => {
     if(state.feed.pics.length === 0) { 
         alert('사진을 선택해 주세요.');
         return;
-    } else if (state.feed.pics.length >= MAX_PIC_COUNT) {
+    } else if (state.feed.pics.length > MAX_PIC_COUNT) {
         alert(`사진은 ${MAX_PIC_COUNT}장까지만 등록할 수 있습니다.`);
         return;
     }
 
     const params = {
-        contents: state.feed.contents,
-        location: state.feed.location
+        contents: state.feed.contents.length === 0 ? null : state.feed.contents,
+        location: state.feed.location.length === 0 ? null : state.feed.location
     }
 
     const formData = new FormData();
@@ -125,23 +128,15 @@ const initInputs = () => {
     state.feed.location = '';
     state.feed.pics = [];
 }
-
-const handleScroll = () => {   
-    // 쓰로틀링을 통해 같은 이벤트가 여러 번 발생하지 않도록 해야 함    
-    if(state.isFinish || state.isLoading || parseInt(window.innerHeight + window.scrollY) + INFINITY_SCROLL_GAP <= document.documentElement.offsetHeight) {
-        return;
-    }        
-    getData();
-};
 </script>
 
 <template>
     <section class="back_color">
         <div class="container d-flex flex-column align-items-center">
             <feed-card v-for="item in state.list" :key="item.id" :item="item"></feed-card>
-            <p v-if="state.isLoading">
-                Loading...
-            </p>
+            <div v-if="state.isLoading" class="loading display-none">
+                <img :src="loadingImg"/>
+            </div>
         </div>
     </section>
     <div class="modal fade" id="newFeedModal" tabIndex="-1" aria-labelledby="newFeedModalLabel" aria-hidden="false">
