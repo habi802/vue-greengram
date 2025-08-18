@@ -6,7 +6,11 @@ export const useAuthenticationStore = defineStore(
     "authentication", 
     () => {
         const state = reactive({            
-            signedUser: null,
+            signedUser: {
+                userId: 0,
+                nickName: '',
+                pic: null
+            },
             isSigned: false
         });
 

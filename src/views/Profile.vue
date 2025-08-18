@@ -5,7 +5,7 @@ import FeedCard from '@/components/FeedCard.vue';
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 import { useAuthenticationStore } from '@/stores/authentication';
-import { getUserProfile, patchUserProfilePic } from '@/services/userService';
+import { getUserProfile, patchUserProfilePic, deleteUserProfilePic } from '@/services/userService';
 import { postUserFollow, deleteUserFollow } from '@/services/followService';
 import { getFeedList } from '@/services/feedService';
 import { bindEvent } from '@/utils/commonUtils';
@@ -21,20 +21,10 @@ const data = {
 };
 
 const state = reactive({
+    isMyProfile: false,
     isLoading: false,
     isFinish: false,
-    userProfile: {
-        userId: 0,
-        uid: '',
-        pic: '',
-        nickName: '',
-        createdAt: '',
-        feedCount: 0,
-        allFeedLikeCount: 0,
-        followerCount: 0,
-        followingCount: 0,
-        followState: 0
-    },
+    userProfile: null,
     list: []
 });
 
@@ -115,8 +105,14 @@ const getFeedData = async () => {
     state.isLoading = false;
 }
 
-const removeUserPic = () => {
+const removeUserPic = async () => {
     console.log('프로파일 이미지 삭제');
+
+    const res = await deleteUserProfilePic();
+    if(res.status === 200) {
+        state.userProfile.pic = null;
+        authenticationStore.setSigndUserPic(null);
+    }
 }
 
 const onClickProfileImg = () => {
@@ -191,7 +187,7 @@ onBeforeRouteUpdate((to, from) => {
 
 <template>
     <section>
-        <div class="flexContainer">
+        <div class="item_container">
             <div>
                 <table>
                     <thead></thead>

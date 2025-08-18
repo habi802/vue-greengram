@@ -13,3 +13,5 @@ export const reissue = data => axios.post(`${path}/reissue`, data).catch((e) => 
 export const getUserProfile = params => axios.get(`${path}/profile`, { params }).catch((e) => e.response);
 
 export const patchUserProfilePic = data => axios.patch(`${path}/profile/pic`, data).catch((e) => e.response);
+
+export const deleteUserProfilePic = () => axios.delete(`${path}/profile/pic`);
