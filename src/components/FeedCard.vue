@@ -27,6 +27,7 @@ const props = defineProps({
     pics: Array,
     contents: String,
     isLike: Boolean,
+    likeCount: Number,
     comment: Object
   },
   ynDel: Boolean,
@@ -36,6 +37,7 @@ const props = defineProps({
 const state = reactive({    
     modules: [Navigation, Pagination, Scrollbar, A11y],
     isLike: props.item.isLike,
+    likeCount: props.item.likeCount,
     pagination: props.item.pics.length <= 5 ? { clickable: true } : null
 });
 
@@ -45,6 +47,11 @@ const toggleLike = async () => {
   const res = await toggleFeedLike(data);
   if(res.status === 200) {
     state.isLike = res.data.result;
+    if (state.isLike) {
+      state.likeCount++;
+    } else {
+      state.likeCount--;
+    }
   }
 }
 </script>
@@ -84,6 +91,7 @@ const toggleLike = async () => {
     </swiper>
     <div class="favCont p-2 d-flex flex-row">
       <i :class="`${state.isLike ? 'fas':'far'} fa-heart pointer rem1_2 me-3 color-red`" @click=toggleLike></i>                
+      <span>{{ state.likeCount }}</span>
     </div>    
     <div class="itemCtnt p-2">
       {{ props.item.contents }}

@@ -116,6 +116,10 @@ const removeUserPic = async () => {
 }
 
 const doDeleteFeed = async (feedId, idx) => {
+    if (!confirm('삭제하시겠습니까?')) {
+        return;
+    }
+    
     console.log('feedId:', feedId);
     console.log('idx:', idx);
     const params = { feed_id: feedId };
