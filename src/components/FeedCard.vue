@@ -65,6 +65,11 @@ const toggleLike = async () => {
         </div>
         <div>{{ props.item.location }}</div>
       </div>
+      <div v-if="props.ynDel && props.item.writerUserId === authenticationStore.state.signedUser.userId">
+        <div className="d-flex flex-column justify-content-center">
+            <i className="fa fa-trash pointer color-red" @click="$emit('onDeleteFeed')"></i>
+        </div>
+      </div>
     </div>
     
     <swiper navigation 

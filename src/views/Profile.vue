@@ -7,7 +7,7 @@ import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 import { useAuthenticationStore } from '@/stores/authentication';
 import { getUserProfile, patchUserProfilePic, deleteUserProfilePic } from '@/services/userService';
 import { postUserFollow, deleteUserFollow } from '@/services/followService';
-import { getFeedList } from '@/services/feedService';
+import { getFeedList, deleteFeed } from '@/services/feedService';
 import { bindEvent } from '@/utils/commonUtils';
 
 const fileInput = ref(null);
@@ -114,6 +114,17 @@ const removeUserPic = async () => {
         authenticationStore.setSigndUserPic(null);
     }
 }
+
+const doDeleteFeed = async (feedId, idx) => {
+    console.log('feedId:', feedId);
+    console.log('idx:', idx);
+    const params = { feed_id: feedId };
+
+    const res = await deleteFeed(params);
+    if (res.status === 200) {
+        state.list.splice(idx, 1);
+    }
+};
 
 const onClickProfileImg = () => {
     if(state.isMyProfile) {
@@ -234,7 +245,7 @@ onBeforeRouteUpdate((to, from) => {
             </div>
 
             <div class="item_container mt-3">
-                <feed-card v-for="item in state.list" :key="item.feedId" :item="item"></feed-card>            
+                <feed-card v-for="(item, idx) in state.list" :key="item.feedId" :item="item" :yn-del="true" @on-delete-feed="doDeleteFeed(item.feedId, idx)"></feed-card>            
             </div>
 
             <div class="loading display-none" v-if="state.isLoading">
