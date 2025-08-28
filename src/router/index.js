@@ -32,20 +32,18 @@ const router = createRouter({
   ],
 })
 
-const unSignedPathList = ['/sign-in', '/sign-up', '/fe/redirect']
+//로그인 하지 않아도 이용할 수 있는 Path들
+const unSignedPathList = [ '/sign-in', '/sign-up', '/fe/redirect' ]
 
-// navigation guard
+//navigation guard
 router.beforeEach((to, from) => {
-  const authentcationStore = useAuthenticationStore();
-  console.log(`router: from: ${from.path} ==> to: ${to.path}`);
-  console.log('unSignedPathList.includes(to.path):', unSignedPathList.includes(to.path));
-  console.log('authentcationStore.state: ', authentcationStore.state);
-
+  const authentcationStore = useAuthenticationStore();  
+  
   if(unSignedPathList.includes(to.path) && authentcationStore.state.isSigned) {
     //로그인 상태에서 /sign-in, /sign-up 경로로 이동하려고 하면
     return { path: '/' }
   } else if(!authentcationStore.state.isSigned && !unSignedPathList.includes(to.path)) {
-    console.log('로그아웃 상태에서 /sign-in, /sign-up 경로가 아닌 경우')
+    console.log('로그아웃 상태에서 /sign-in, /sign-up, /fe/redirect 경로가 아닌 경우')
     //로그아웃 상태에서 /sign-in, /sign-up 경로가 아닌 경우
     return { path: '/sign-in' }
   }  

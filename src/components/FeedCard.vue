@@ -47,11 +47,7 @@ const toggleLike = async () => {
   const res = await toggleFeedLike(data);
   if(res.status === 200) {
     state.isLike = res.data.result;
-    if (state.isLike) {
-      state.likeCount++;
-    } else {
-      state.likeCount--;
-    }
+    state.likeCount = state.isLike ? state.likeCount + 1 : state.likeCount - 1;
   }
 }
 </script>
@@ -67,7 +63,10 @@ const toggleLike = async () => {
       <div class="p-3 flex-grow-1">
         <div>
           <router-link :to="`/profile/${props.item.writerUserId}`">
-            <span class="pointer">{{ props.item.writerNm }}</span>
+            <span class="pointer">
+              {{ props.item.writerNickName ? props.item.writerNickName : props.item.writerUid }}
+              - {{ getDateTimeInfo(props.item.createdAt) }}
+            </span>
           </router-link>
         </div>
         <div>{{ props.item.location }}</div>

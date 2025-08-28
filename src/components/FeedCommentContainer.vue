@@ -1,4 +1,5 @@
 <script setup>
+import loadingImg from '@/assets/loading.gif';
 import FeedCommentCard from './FeedCommentCard.vue';
 import { reactive } from 'vue';
 import { postComment, getCommentList, deleteComment } from '@/services/feedCommentService';
