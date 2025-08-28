@@ -164,9 +164,9 @@ onMounted(() => {
     getData(route.params.userId);
 });
 
-onUnmounted(() => {
-    feedStore.init();
-});
+// onUnmounted(() => {
+//     feedStore.init();
+// });
 
 onBeforeRouteUpdate((to, from) => {
     const toUserId = to.params.userId;

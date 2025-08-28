@@ -3,12 +3,15 @@ import logo from '@/assets/logo.png';
 import ProfileImg from './ProfileImg.vue';
 import { useAuthenticationStore } from '@/stores/authentication';
 import { signOut } from '@/services/userService';
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
 import { getKeywordList, getFeedList } from '@/services/feedService';
 import { useFeedStore } from '@/stores/feed';
+import { useRoute } from 'vue-router';
 
 const feedStore = useFeedStore();
 const authenticationStore = useAuthenticationStore();
+
+const route = useRoute();
 
 const state = reactive({
     search: '',
@@ -51,6 +54,10 @@ const getFeedData = async () => {
     feedStore.setPage(1);
     feedStore.setReLoading(true);
 }
+
+watch(() => route.path, path => {
+    state.search = '';
+});
 </script>
 
 <template>
